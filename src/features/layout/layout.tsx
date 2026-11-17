@@ -11,6 +11,7 @@ import { ToastEventListener } from './listeners/toast-event-listener';
 import { ConfigImportedListener } from './listeners/config-imported-listener';
 import { WaylandListener } from './listeners/wayland-listener';
 import { TrayMenuI18nListener } from './listeners/tray-menu-i18n-listener';
+import { LiveCaptionsListener } from './listeners/live-captions-listener';
 
 export const Layout = () => {
     const { pathname } = useLocation();
@@ -24,6 +25,7 @@ export const Layout = () => {
             <ConfigImportedListener />
             <WaylandListener />
             <TrayMenuI18nListener />
+            <LiveCaptionsListener />
             <AppSidebar />
             <SidebarInset
                 className={clsx('bg-background', 'text-white', 'pr-8', 'pt-8', 'flex', 'items-center', 'pl-[17.2rem]')}

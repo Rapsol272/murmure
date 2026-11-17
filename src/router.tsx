@@ -12,6 +12,7 @@ import { VoiceMode } from './features/extensions/voice-mode/voice-mode';
 import { ImportExport } from './features/settings/import-export/import-export';
 import { SmartMic } from './features/extensions/smart-mic/smart-mic';
 import { LocalApi } from './features/extensions/local-api/local-api';
+import { LiveCaptions } from './features/extensions/live-captions/live-captions';
 
 const rootRoute = createRootRoute({
     component: () => <Layout />,
@@ -95,6 +96,12 @@ const extensionsLocalApiRoute = createRoute({
     component: LocalApi,
 });
 
+const extensionsLiveCaptionsRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/extensions/live-captions',
+    component: LiveCaptions,
+});
+
 const extensionsIndexRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/extensions',
@@ -136,6 +143,7 @@ const routeTree = rootRoute.addChildren([
     extensionsVoiceModeRoute,
     extensionsSmartMicRoute,
     extensionsLocalApiRoute,
+    extensionsLiveCaptionsRoute,
     aboutRoute,
 ]);
 

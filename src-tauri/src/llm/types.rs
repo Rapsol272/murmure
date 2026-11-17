@@ -188,9 +188,16 @@ pub struct OllamaGenerateRequest {
     pub think: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+/// Deterministic by default (temperature 0); `None` keeps Ollama's own value.
+#[derive(Serialize, Deserialize, Debug, Default)]
 pub struct OllamaOptions {
     pub temperature: f32,
+    /// CPU threads Ollama may use for this request.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub num_thread: Option<u32>,
+    /// Context window in tokens: drives how much memory the model takes.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub num_ctx: Option<u32>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

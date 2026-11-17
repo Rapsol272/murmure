@@ -226,16 +226,25 @@ fn build_stream(
 ) -> Result<(cpal::Stream, JoinHandle<()>)> {
     let (tx, rx) = mpsc::channel::<Vec<f32>>();
 
-    let stream = match config.sample_format() {
-        cpal::SampleFormat::F32 => build_stream_impl::<f32>(device, config, tx),
-        cpal::SampleFormat::I16 => build_stream_impl::<i16>(device, config, tx),
-        cpal::SampleFormat::I32 => build_stream_impl::<i32>(device, config, tx),
-        f => Err(anyhow::anyhow!("Unsupported sample format: {:?}", f)),
-    }?;
+    let stream = build_mono_input_stream(device, config, tx)?;
 
     let writer_thread = spawn_writer_thread(rx, writer, ctx);
 
     Ok((stream, writer_thread))
+}
+
+/// Builds an input stream that downmixes each buffer to mono f32 and hands it to `tx`.
+pub(crate) fn build_mono_input_stream(
+    device: &cpal::Device,
+    config: &cpal::SupportedStreamConfig,
+    tx: Sender<Vec<f32>>,
+) -> Result<cpal::Stream> {
+    match config.sample_format() {
+        cpal::SampleFormat::F32 => build_stream_impl::<f32>(device, config, tx),
+        cpal::SampleFormat::I16 => build_stream_impl::<i16>(device, config, tx),
+        cpal::SampleFormat::I32 => build_stream_impl::<i32>(device, config, tx),
+        f => Err(anyhow::anyhow!("Unsupported sample format: {:?}", f)),
+    }
 }
 
 fn build_stream_impl<T>(

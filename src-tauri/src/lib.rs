@@ -9,6 +9,7 @@ mod engine;
 mod formatting_rules;
 mod history;
 mod http_api;
+mod live_captions;
 mod llm;
 mod model;
 mod onboarding;
@@ -307,6 +308,7 @@ pub fn run() {
             }
 
             app.manage(HttpApiState::new());
+            app.manage(live_captions::LiveCaptionsState::default());
             app.manage(SmartMicState::new());
             app.manage(utils::enigo_session::EnigoState::default());
 
@@ -475,6 +477,10 @@ pub fn run() {
             start_http_api_server,
             stop_http_api_server,
             get_http_api_status,
+            start_live_captions,
+            stop_live_captions,
+            is_live_captions_running,
+            export_live_captions,
             set_copy_to_clipboard,
             set_auto_insert,
             set_paste_method,

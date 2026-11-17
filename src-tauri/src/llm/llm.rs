@@ -66,11 +66,12 @@ fn extract_system_prompt(prompt: &str) -> (Option<String>, String) {
     }
 }
 
-async fn generate_local(
+pub(crate) async fn generate_local(
     url: &str,
     model: &str,
     system_prompt: Option<&str>,
     user_prompt: &str,
+    options: OllamaOptions,
 ) -> Result<String, String> {
     validate_url(url)?;
     let url = format!("{}/generate", normalize_url(url));
@@ -79,7 +80,7 @@ async fn generate_local(
         model: model.to_string(),
         prompt: user_prompt.to_string(),
         stream: false,
-        options: Some(OllamaOptions { temperature: 0.0 }),
+        options: Some(options),
         system: system_prompt.map(|s| s.to_string()),
         think: false,
     };
@@ -183,7 +184,14 @@ async fn dispatch_to_llm(
 
     let result = match provider {
         LLMProvider::Local => {
-            generate_local(&settings.url, model, system_prompt, user_prompt).await
+            generate_local(
+                &settings.url,
+                model,
+                system_prompt,
+                user_prompt,
+                OllamaOptions::default(),
+            )
+            .await
         }
         LLMProvider::Remote => {
             let api_key = load_remote_api_key();
@@ -533,7 +541,7 @@ pub async fn warmup_ollama_model(app: &AppHandle, mode: RecordingMode) -> Result
         model,
         prompt: " ".to_string(),
         stream: false,
-        options: Some(OllamaOptions { temperature: 0.0 }),
+        options: Some(OllamaOptions::default()),
         system: None,
         think: false,
     };

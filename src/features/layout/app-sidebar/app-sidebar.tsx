@@ -17,6 +17,7 @@ import {
     Smartphone,
     Zap,
     Plug,
+    Captions,
 } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
@@ -89,6 +90,12 @@ const getExtensionsSubItems = (t: (key: string) => string) => [
         url: '/extensions/local-api',
         icon: Plug,
         dataTestId: 'local-api-tab',
+    },
+    {
+        name: t('Live Captions'),
+        url: '/extensions/live-captions',
+        icon: Captions,
+        dataTestId: 'live-captions-tab',
     },
 ];
 
